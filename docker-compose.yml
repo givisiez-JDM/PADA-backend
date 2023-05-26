@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+
+  server:
+    container_name: app_vacina
+    build: ./
+    restart: on-failure
+    ports:
+      - 3001:3001
+    platform: linux/x86_64
+    environment:
+      - POSTGRES_DATABASE=vacina
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14.1-alpine
+    container_name: postgres_db
+    platform: linux/x86_64
+    ports:
+      - 3002:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: on-failure
