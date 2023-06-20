@@ -3,9 +3,10 @@ import { StatusCodes } from 'http-status-codes';
 export enum ErrorTypes {
   GenericError = 'GenericError',
   BadRequest = 'BadRequest',
-  EntityNotFound = 'EntityNotFound',
+  DoctorNotFound = 'DoctorNotFound',
+  PatientNotFound = 'PatientNotFound',
+  ReportNotFound = 'ReportNotFound',
   ConflictError = 'ConflictError',
-  ValidationError = 'ValidationError',
   UnauthorizedError = 'UnauthorizedError',
   InvalidToken = 'InvalidToken'
 }
@@ -25,20 +26,24 @@ export const errorCatalog: ErrorCatalog = {
     httpStatus: StatusCodes.INTERNAL_SERVER_ERROR
   },
   BadRequest: {
-    message: 'Something wrong happend',
+    message: 'Something wrong happened',
     httpStatus: StatusCodes.BAD_REQUEST
   },
-  EntityNotFound: {
-    message: 'Entity Not Found',
+  DoctorNotFound: {
+    message: 'Doctor Not Found',
+    httpStatus: StatusCodes.NOT_FOUND
+  },
+  PatientNotFound: {
+    message: 'Patient Not Found',
+    httpStatus: StatusCodes.NOT_FOUND
+  },
+  ReportNotFound: {
+    message: 'Report Not Found',
     httpStatus: StatusCodes.NOT_FOUND
   },
   ConflictError: {
-    message: 'Entity already exists',
+    message: 'Email already in use',
     httpStatus: StatusCodes.CONFLICT
-  },
-  ValidationError: {
-    message: 'Validation Error',
-    httpStatus: StatusCodes.BAD_REQUEST
   },
   UnauthorizedError: {
     message: 'Invalid username or password',

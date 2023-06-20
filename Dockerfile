@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 3001
 
+ENV POSTGRES_DATABASE=vacina
+
 CMD ["npm", "start"]

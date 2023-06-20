@@ -1,0 +1,945 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Projeto Alergia",
+    "version": "1.0.0",
+    "description": "In order to successfully use the documentation, first create a new doctor and log in. By doing that you will be able to test the doctor's endpoints, register a new patient and later on, log in and test the patient's endpoints as well."
+  },
+  "servers": [
+    {
+      "url": "https://app-vacina-backend-production.up.railway.app/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "doctor",
+      "description": "Doctor´s endpoints"
+    },
+    {
+      "name": "patient",
+      "description": "Patient´s endpoints"
+    }
+  ],
+  "paths": {
+    "/doctor": {
+      "post": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "Add a doctor.",
+        "operationId": "createDoctor",
+        "requestBody": {
+          "description": "Doctor´s information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Doctor"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already in use."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "List all doctors.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "getDoctors",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DoctorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "List not found."
+          }
+        }
+      }
+    },
+    "/doctor/{id}": {
+      "put": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "Update doctor´s information.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "updateDoctor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Doctor´s ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New information data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Doctor"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Doctor not found."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "Find a doctor by ID.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "getDoctorById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Doctor´s ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Doctor not found."
+          }
+        }
+      }
+    },
+    "/doctor/search": {
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "Find a doctor by name.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "getDoctorByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Doctor´s name.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DoctorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Doctor not found."
+          }
+        }
+      }
+    },
+    "/login/doctor": {
+      "post": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "Login a doctor.",
+        "operationId": "loginDoctor",
+        "requestBody": {
+          "description": "Doctor´s information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid username or password."
+          }
+        }
+      }
+    },
+    "/doctor/patient-register": {
+      "post": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "Register a patient.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "createPatient",
+        "requestBody": {
+          "description": "Patient´s information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientRegistration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientRegistrationResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already in use."
+          }
+        }
+      }
+    },
+    "/doctor/list-patients": {
+      "get": {
+        "tags": [
+          "doctor"
+        ],
+        "description": "List all patients by Doctor Id.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "getPatientsByDoctorId",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PatientListResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "List not found."
+          }
+        }
+      }
+    },
+    "/patient/set-password/{id}": {
+      "patch": {
+        "tags": [
+          "patient"
+        ],
+        "description": "Set patient´s password.",
+        "operationId": "updatePatientPassword",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Patient´s ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New password.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8,
+                    "maxLength": 30,
+                    "example": "1Ab@cdef"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Password saved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient Not Found."
+          }
+        }
+      }
+    },
+    "/patient": {
+      "get": {
+        "tags": [
+          "patient"
+        ],
+        "description": "List all patients.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "getPatients",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PatientResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found."
+          }
+        }
+      }
+    },
+    "/patient/{id}": {
+      "patch": {
+        "tags": [
+          "patient"
+        ],
+        "description": "Update patient´s information.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "updatePatient",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Patient´s ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New information data.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "patient"
+        ],
+        "description": "Find a patient by ID.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "getPatientById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Patient´s ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found."
+          }
+        }
+      }
+    },
+    "/patient/search": {
+      "get": {
+        "tags": [
+          "patient"
+        ],
+        "description": "Find a patient by name.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "operationId": "getPatientByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Patient´s name.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PatientResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found."
+          }
+        }
+      }
+    },
+    "/login/patient": {
+      "post": {
+        "tags": [
+          "patient"
+        ],
+        "description": "Login a patient.",
+        "operationId": "loginPatient",
+        "requestBody": {
+          "description": "Patient´s information.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid username or password."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Doctor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Mason B.",
+            "minLength": 3
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "masonb@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "1Ab@cdef"
+          },
+          "about": {
+            "type": "string",
+            "example": "Mason B., MD, PhD, is a board-certified neurosurgeon specializing in complex intracranial surgery including brain, pituitary, and skull base tumors, and brain aneurysms."
+          },
+          "CRM": {
+            "type": "string",
+            "example": "123456/SP"
+          },
+          "specialty": {
+            "type": "string",
+            "example": "Neurosurgery"
+          },
+          "photo": {
+            "type": "string",
+            "format": "url",
+            "example": "url path"
+          }
+        }
+      },
+      "DoctorResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "type": "string",
+            "example": "doctor",
+            "readOnly": true
+          },
+          "about": {
+            "type": "string"
+          },
+          "CRM": {
+            "type": "string"
+          },
+          "specialty": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string",
+            "format": "url"
+          }
+        }
+      },
+      "PatientListResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string",
+            "format": "url"
+          }
+        }
+      },
+      "PatientRegistration": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Beatrice L.",
+            "minLength": 3
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "beatrice.l@email.com"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "05/05/2005"
+          },
+          "dosage": {
+            "type": "string",
+            "enum": [
+              "1:10",
+              "1:100",
+              "1:1.000",
+              "1:10.000"
+            ]
+          },
+          "allergies": {
+            "type": "string",
+            "enum": [
+              "food",
+              "wasp",
+              "mite",
+              "cat",
+              "ball",
+              "insect",
+              "bee",
+              "ant",
+              "dog",
+              "cockroach",
+              "fungus",
+              "candidiasis"
+            ]
+          },
+          "frequency": {
+            "type": "string",
+            "enum": [
+              "7 days",
+              "2 weeks",
+              "3 weeks",
+              "4 weeks"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "vaccine",
+              "sublingual"
+            ]
+          },
+          "startTreatment": {
+            "type": "string",
+            "format": "date",
+            "example": "05/05/2023"
+          },
+          "endTreatment": {
+            "type": "string",
+            "format": "date",
+            "example": "05/05/2025"
+          }
+        }
+      },
+      "PatientRegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "patient": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "readOnly": true
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "birthDate": {
+                "type": "string"
+              },
+              "doctorId": {
+                "type": "string",
+                "readOnly": true
+              }
+            }
+          },
+          "treatment": {
+            "$ref": "#/components/schemas/Treatment"
+          }
+        }
+      },
+      "PatientUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Mason B."
+          },
+          "email": {
+            "type": "string",
+            "example": "masonb@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "450Eht@6"
+          },
+          "photo": {
+            "type": "string",
+            "format": "url",
+            "example": "url path"
+          },
+          "telephone": {
+            "type": "string",
+            "example": "(19)99999-9999"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "05/05/2005"
+          }
+        }
+      },
+      "PatientResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string",
+            "format": "url"
+          },
+          "telephone": {
+            "type": "string",
+            "example": "(19)99999-9999"
+          },
+          "birthDate": {
+            "type": "string",
+            "example": "05/05/2005"
+          }
+        }
+      },
+      "Treatment": {
+        "type": "object",
+        "properties": {
+          "dosage": {
+            "type": "string",
+            "enum": [
+              "1:10",
+              "1:100",
+              "1:1.000",
+              "1:10.000"
+            ]
+          },
+          "allergies": {
+            "type": "string",
+            "enum": [
+              "food",
+              "wasp",
+              "mite",
+              "cat",
+              "ball",
+              "insect",
+              "bee",
+              "ant",
+              "dog",
+              "cockroach",
+              "fungus",
+              "candidiasis"
+            ]
+          },
+          "frequency": {
+            "type": "string",
+            "enum": [
+              "7 days",
+              "2 weeks",
+              "3 weeks",
+              "4 weeks"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "vaccine",
+              "sublingual"
+            ]
+          },
+          "startTreatment": {
+            "type": "string",
+            "format": "date"
+          },
+          "endTreatment": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "masonb@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "450Eht@6"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "readOnly": true
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "readOnly": true
+              }
+            }
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  }
+}

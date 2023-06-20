@@ -9,7 +9,6 @@ services:
       - 3001:3001
     platform: linux/x86_64
     environment:
-      - POSTGRES_DATABASE=vacina
       - POSTGRES_HOST=db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -26,3 +25,5 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     restart: on-failure
+    volumes:
+      - ./src/database:/docker-entrypoint-initdb.d
