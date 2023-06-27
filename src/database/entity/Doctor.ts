@@ -7,7 +7,7 @@ export class Doctor extends Person {
   @Column({ type: "varchar", nullable: true })
   about: string;
 
-  @Column({ type: "varchar", unique: true, nullable: false, length: 13 })
+  @Column({ type: "varchar", unique: true, nullable: true, length: 13 })
   CRM: string;
 
   @Column({ type: "varchar", length: 40, nullable: true })
