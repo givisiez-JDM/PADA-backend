@@ -30,7 +30,6 @@ export const patientUpdateSchema = (data: object) => {
     name: Joi.string().min(3).required(),
     email: Joi.string().email().required(),
     password: passwordComplexity(complexityOptions).required(),
-    // role: Joi.string().valid("patient"),
     photo: Joi.string(),
     telephone: Joi.string().pattern(telephoneRegex).required(),
     birthDate: Joi.date().required(),
@@ -54,6 +53,7 @@ export const patientRegistrationSchema = (data: object): Joi.ValidationResult =>
     birthDate: Joi.date().required(),
     dosage: Joi.string().valid(...dosageValues).required(),
     allergies: Joi.string().valid(...allergiesValues).required(),
+    // allergies: Joi.array().items(Joi.string().valid(...allergiesValues)).required(),
     frequency: Joi.string().valid(...frequencyValues).required(),
     method: Joi.string().valid(...methodValues).required(),
     startTreatment: Joi.date().required(),
@@ -71,9 +71,9 @@ export const doctorSchema = (data: object): Joi.ValidationResult => {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
     email: Joi.string().email().required(),
-    password: passwordComplexity(complexityOptions),
+    password: passwordComplexity(complexityOptions).required(),
     about: Joi.string(),
-    CRM: Joi.string().min(7).max(13).pattern(crmRegex).required(),
+    CRM: Joi.string().min(7).max(13).pattern(crmRegex),
     specialty: Joi.string().max(40),
     photo: Joi.string(),
   });
