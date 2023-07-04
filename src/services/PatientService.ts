@@ -1,42 +1,10 @@
 import md5 from "md5";
-import { randomUUID } from "node:crypto";
 import { AppDataSource } from "../database/data-source";
 import { Patient } from "../database/entity/Patient";
-import { UserRole } from "../database/entity/Person";
 import { ErrorTypes } from "../errors/catalog";
 import { patientUpdateSchema } from "../utils/validations";
-// import { patientSchema } from "../utils/validations";
 
 export default class PatientService {
-  // createPatient = async (
-  //   name: string,
-  //   email: string,
-  //   password: string,
-  //   birthDate: string,
-  //   telephone: string
-  // ) => {
-  //   // patientSchema({ name, email, password });
-
-  //   const alreadyExists = await AppDataSource.getRepository(Patient)
-  //     .createQueryBuilder("patient")
-  //     .where("patient.email = :email", { email })
-  //     .getOne();
-  //   if (alreadyExists) throw new Error(ErrorTypes.ConflictError);
-
-  //   const patient = await AppDataSource.createQueryBuilder()
-  //     .insert()
-  //     .into(Patient)
-  //     .values({ id: randomUUID(), name, email, password: md5(password), role: UserRole.PATIENT, birthDate, telephone })
-  //     .execute();
-
-  //   const insertedPatient = await AppDataSource.getRepository(Patient)
-  //     .createQueryBuilder("patient")
-  //     .where("patient.id = :id", { id: patient.identifiers[0].id })
-  //     .select(["patient.id", "patient.name", "patient.email"])
-  //     .getOne();
-
-  //   return insertedPatient;
-  // };
 
   updatePassword = async (id: string, password: string): Promise<object> => {
     const patient = await AppDataSource.createQueryBuilder()
@@ -82,7 +50,7 @@ export default class PatientService {
     const patient = await AppDataSource.getRepository(Patient)
       .createQueryBuilder("patient")
       .where("patient.id = :id", { id })
-      .select(["patient.id", "patient.name", "patient.email", "patient.photo", "patient.telephone", "patient.birth_date"])
+      .select(["patient.id", "patient.name", "patient.email", "patient.photo", "patient.telephone", "patient.birthDate", "patient.doctorId"])
       .getOne();
     if (!patient) throw new Error(ErrorTypes.PatientNotFound);
     return patient;
@@ -92,7 +60,7 @@ export default class PatientService {
     const patients = await AppDataSource.getRepository(Patient)
       .createQueryBuilder("patient")
       .where("LOWER(patient.name) LIKE LOWER(:name)", { name: `%${name}%` })
-      .select(["patient.id", "patient.name", "patient.email", "patient.photo", "patient.telephone", "patient.birth_date"])
+      .select(["patient.id", "patient.name", "patient.email", "patient.photo", "patient.telephone", "patient.birthDate", "patient.doctorId"])
       .getMany();
     if (!patients.length) throw new Error(ErrorTypes.PatientNotFound);
     return patients;
@@ -110,7 +78,7 @@ export default class PatientService {
   list = async (): Promise<Patient[]> => {
     const patients = await AppDataSource.getRepository(Patient)
       .createQueryBuilder("patient")
-      .select(["patient.id", "patient.name", "patient.email", "patient.photo", "patient.telephone", "patient.birth_date"])
+      .select(["patient.id", "patient.name", "patient.email", "patient.photo", "patient.telephone", "patient.birthDate", "patient.doctorId"])
       .getMany();
     if (!patients.length) throw new Error(ErrorTypes.PatientNotFound);
     return patients;
