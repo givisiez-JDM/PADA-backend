@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import PatientService from "../services/PatientService";
-import Jwt from "../utils/jwt";
 
 export default class PatientController {
-  constructor(private patientService: PatientService) { }
+  constructor(private patientService: PatientService) {}
 
-  list = async (req: Request, res: Response) => {
+  list = async (_req: Request, res: Response) => {
     const patients = await this.patientService.list();
     res.status(StatusCodes.OK).json(patients);
   };
@@ -23,35 +22,28 @@ export default class PatientController {
     res.status(StatusCodes.OK).json(patients);
   };
 
-  // createPatient = async (req: Request, res: Response) => {
-  //   const { name, email, password, birthDate, telephone } = req.body;
-  //   const patient = await this.patientService.createPatient(
-  //     name,
-  //     email,
-  //     password,
-  //     birthDate,
-  //     telephone
-  //   );
-  //   res.status(StatusCodes.CREATED).json(patient);
-  // };
   updatePassword = async (req: Request, res: Response) => {
     const { password } = req.body;
     const { id } = req.params;
 
     const patient = await this.patientService.updatePassword(id, password);
 
-    res.status(StatusCodes.CREATED).json(patient)
+    res.status(StatusCodes.OK).json(patient);
   };
 
   updatePatient = async (req: Request, res: Response) => {
+    const { name, email, password, telephone, birthDate } = req.body;
     const { id } = req.params;
-    const { name, email, password, photo, telephone, birthDate } = req.body;
+    const photoBuffer = req.file?.buffer;
+
+    const base64Image = photoBuffer.toString("base64");
+
     const patient = await this.patientService.updatePatient(
       id,
       name,
       email,
       password,
-      photo,
+      base64Image,
       telephone,
       birthDate
     );

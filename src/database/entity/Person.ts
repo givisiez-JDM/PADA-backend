@@ -8,7 +8,7 @@ export enum UserRole {
 
 @Entity()
 export abstract class Person {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "uuid" })
   id: string;
 
   @Column({ type: "varchar", nullable: false, length: 100 })
@@ -20,7 +20,7 @@ export abstract class Person {
   @Column({ nullable: true })
   password: string;
 
-  @Column({ type: "varchar", nullable: true })
+  @Column({ type: "bytea", nullable: true }) // Colocar como varchar se quiser salvar como string
   photo: string;
 
   @Column({

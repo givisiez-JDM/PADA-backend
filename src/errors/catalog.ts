@@ -5,8 +5,11 @@ export enum ErrorTypes {
   BadRequest = 'BadRequest',
   DoctorNotFound = 'DoctorNotFound',
   PatientNotFound = 'PatientNotFound',
+  PhaseNotFound = 'PhaseNotFound',
   ReportNotFound = 'ReportNotFound',
-  ConflictError = 'ConflictError',
+  ConflictEmailError = 'ConflictEmailError',
+  ConflictPhaseError = 'ConflictPhaseError',
+  ConflictCRMError = 'ConflictCRMError',
   UnauthorizedError = 'UnauthorizedError',
   InvalidToken = 'InvalidToken'
 }
@@ -37,12 +40,24 @@ export const errorCatalog: ErrorCatalog = {
     message: 'Patient Not Found',
     httpStatus: StatusCodes.NOT_FOUND
   },
+  PhaseNotFound: {
+    message: 'Phase Not Found',
+    httpStatus: StatusCodes.NOT_FOUND
+  },
   ReportNotFound: {
     message: 'Report Not Found',
     httpStatus: StatusCodes.NOT_FOUND
   },
-  ConflictError: {
+  ConflictEmailError: {
     message: 'Email already in use',
+    httpStatus: StatusCodes.CONFLICT
+  },
+  ConflictPhaseError: {
+    message: 'Phase number already exists on this treatment',
+    httpStatus: StatusCodes.CONFLICT
+  },
+  ConflictCRMError: {
+    message: 'CRM already in use',
     httpStatus: StatusCodes.CONFLICT
   },
   UnauthorizedError: {

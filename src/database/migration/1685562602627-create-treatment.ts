@@ -8,22 +8,14 @@ export class CreateTreatment1685562602627 implements MigrationInterface {
 				columns: [
 					{
 						name: "id",
-						type: "integer",
-						isPrimary: true,
-					},
-					{
-						name: "dosage",
-						type: "varchar",
-						isNullable: false,
+            type: "uuid",
+            isPrimary: true,
+            generationStrategy: "uuid",
 					},
 					{
 						name: "allergies",
 						type: "varchar",
-						isNullable: false,
-					},
-					{
-						name: "frequency",
-						type: "varchar",
+						isArray: true,
 						isNullable: false,
 					},
 					{
@@ -32,13 +24,8 @@ export class CreateTreatment1685562602627 implements MigrationInterface {
 						isNullable: false,
 					},
 					{
-						name: "start_Treatment",
-						type: "date",
-						isNullable: false,
-					},
-					{
-						name: "end_Treatment",
-						type: "date",
+						name: "active",
+						type: "boolean",
 						isNullable: false,
 					},
 					{

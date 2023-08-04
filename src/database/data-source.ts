@@ -4,11 +4,12 @@ import { DataSource } from "typeorm";
 import { Patient } from "./entity/Patient";
 import { Doctor } from "./entity/Doctor";
 import { Treatment } from "./entity/Treatment";
+import { Phase } from "./entity/Phase";
 import { HealthReport } from "./entity/HealthReport";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  // host: 'localhost',
+  //host: 'localhost',
   host: process.env.HOST,
   port: 5432,
   username: process.env.POSTGRES_USER,
@@ -16,7 +17,7 @@ export const AppDataSource = new DataSource({
   database: process.env.POSTGRES_DATABASE,
   synchronize: true,
   logging: true,
-  entities: [Patient, Doctor, Treatment, HealthReport],
+  entities: [Patient, Doctor, Treatment, Phase, HealthReport],
   migrations: [
     "src/database/migration/*.ts"
   ],

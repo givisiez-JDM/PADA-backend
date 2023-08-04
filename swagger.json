@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://app-vacina-backend-production.up.railway.app/"
+      "url": "http://localhost:3001"
     }
   ],
   "tags": [

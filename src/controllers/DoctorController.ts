@@ -4,11 +4,14 @@ import DoctorService from "../services/DoctorService";
 import Jwt from "../utils/jwt";
 
 export default class DoctorController {
-  constructor(private doctorService: DoctorService) {}
+  constructor(private doctorService: DoctorService) { }
 
   createDoctor = async (req: Request, res: Response) => {
-    const { name, email, password, role, about, CRM, specialty, photo } =
-      req.body;
+    const { name, email, password, about, CRM, specialty } = req.body;
+    const photoBuffer = req.file?.buffer;
+
+    const base64Image = photoBuffer?.toString('base64'); // salva no DB como string, se quiser salvar como binário BLOB é só remover essa linha e mudar o type para Buffer
+
     const doctor = await this.doctorService.createDoctor(
       name,
       email,
@@ -16,14 +19,17 @@ export default class DoctorController {
       about,
       CRM,
       specialty,
-      photo
+      base64Image
     );
     res.status(StatusCodes.CREATED).json(doctor);
   };
 
   updateDoctor = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, email, password, role, about, CRM, specialty, photo } = req.body;
+    const { name, email, password, role, about, CRM, specialty } = req.body;
+    const photoBuffer = req.file?.buffer;
+    const base64Image = photoBuffer.toString('base64');
+
     const doctor = await this.doctorService.updateDoctor(
       id,
       name,
@@ -33,7 +39,7 @@ export default class DoctorController {
       about,
       CRM,
       specialty,
-      photo
+      base64Image
     );
     res.status(StatusCodes.OK).json(doctor);
   };
@@ -62,12 +68,12 @@ export default class DoctorController {
   };
 
   patientRegistration = async (req: Request, res: Response) => {
-    const { name, email, birthDate, dosage, allergies, frequency, method, startTreatment, endTreatment } = req.body;
+    const { name, email, birthDate, allergies, method, active } = req.body;
     const token = req.headers.authorization;
     const tokenPayload = Jwt.validateToken(token);
     const doctorId = tokenPayload.id;
 
-    const patient = await this.doctorService.patientRegistration(doctorId, name, email, birthDate, dosage, allergies, frequency, method, startTreatment, endTreatment);
+    const patient = await this.doctorService.patientRegistration(doctorId, name, email, birthDate, allergies, method, active);
     res.status(StatusCodes.CREATED).json(patient);
   }
 
@@ -75,7 +81,7 @@ export default class DoctorController {
     const token = req.headers.authorization;
     const tokenPayload = Jwt.validateToken(token);
     const doctorId = tokenPayload.id;
-    
+
     const patients = await this.doctorService.listPatientsByDoctorId(doctorId);
     res.status(StatusCodes.OK).json(patients);
   }

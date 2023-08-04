@@ -20,11 +20,17 @@ export default class DoctorService {
   ): Promise<Doctor> => {
     doctorSchema({ name, email, password, about, CRM, specialty, photo });
 
-    const alreadyExists = await AppDataSource.getRepository(Doctor)
+    const alreadyEmailExists = await AppDataSource.getRepository(Doctor)
       .createQueryBuilder("doctor")
       .where("doctor.email = :email", { email })
       .getOne();
-    if (alreadyExists) throw new Error(ErrorTypes.ConflictError);
+    if (alreadyEmailExists) throw new Error(ErrorTypes.ConflictEmailError);
+
+    const alreadyCRMExists = await AppDataSource.getRepository(Doctor)
+      .createQueryBuilder("doctor")
+      .where("doctor.CRM = :CRM", { CRM })
+      .getOne();
+    if (alreadyCRMExists) throw new Error(ErrorTypes.ConflictCRMError);
 
     const doctor = await AppDataSource.createQueryBuilder()
       .insert()
@@ -49,7 +55,6 @@ export default class DoctorService {
         "doctor.id",
         "doctor.name",
         "doctor.email",
-        "doctor.role",
         "doctor.about",
         "doctor.CRM",
         "doctor.specialty",
@@ -88,7 +93,7 @@ export default class DoctorService {
       .where("doctor.id = :id", { id })
       .execute();
     if (!doctor.affected) throw new Error(ErrorTypes.DoctorNotFound);
-    return { id, name, email, role, about, CRM, specialty, photo };
+    return { id, name, email, about, CRM, specialty, photo };
   };
 
   deleteDoctor = async (id: string): Promise<object> => {
@@ -173,32 +178,27 @@ export default class DoctorService {
     name: string,
     email: string,
     birthDate: Date,
-    dosage: string,
-    allergies: string,
-    frequency: string,
+    allergies: string[],
     method: string,
-    startTreatment: string,
-    endTreatment: string
+    active: boolean
   ) => {
     patientRegistrationSchema({
       doctorId,
       name,
       email,
       birthDate,
-      dosage,
       allergies,
-      frequency,
       method,
-      startTreatment,
-      endTreatment,
+      active,
     });
 
-    const alreadyExists = await AppDataSource.getRepository(Patient)
+    const alreadyEmailExists = await AppDataSource.getRepository(Patient)
       .createQueryBuilder("patient")
       .where("patient.email = :email", { email })
       .getOne();
-    if (alreadyExists) throw new Error(ErrorTypes.ConflictError);
-
+    if (alreadyEmailExists) throw new Error(ErrorTypes.ConflictEmailError);
+    
+  
     const patient = await AppDataSource.createQueryBuilder()
       .insert()
       .into(Patient)
@@ -220,19 +220,25 @@ export default class DoctorService {
 
     const patientId = insertedPatient.id;
 
-    await AppDataSource.createQueryBuilder()
+    const treatment = await AppDataSource.createQueryBuilder()
       .insert()
       .into(Treatment)
       .values({
+        id: randomUUID(),
         patientId,
-        dosage,
         allergies,
-        frequency,
         method,
-        startTreatment,
-        endTreatment,
+        active,
       })
       .execute();
+    
+    const insertedTreatment = await AppDataSource.getRepository(Treatment)
+      .createQueryBuilder("treatment")
+      .where("treatment.id = :id", { id: treatment.identifiers[0].id })
+      .select("treatment.id")
+      .getOne();
+
+    const treatmentId = insertedTreatment.id;
 
     return {
       patient: {
@@ -243,12 +249,10 @@ export default class DoctorService {
         doctorId,
       },
       treatment: {
-        dosage,
+        treatmentId,
         allergies,
-        frequency,
         method,
-        startTreatment,
-        endTreatment,
+        active,
       },
     };
   };

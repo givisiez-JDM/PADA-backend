@@ -2,11 +2,13 @@ import md5 from "md5";
 import { AppDataSource } from "../database/data-source";
 import { Patient } from "../database/entity/Patient";
 import { ErrorTypes } from "../errors/catalog";
-import { patientUpdateSchema } from "../utils/validations";
+import { patientUpdateSchema, updatePasswordSchema } from "../utils/validations";
 
 export default class PatientService {
 
   updatePassword = async (id: string, password: string): Promise<object> => {
+    updatePasswordSchema({ password });
+
     const patient = await AppDataSource.createQueryBuilder()
       .update(Patient)
       .set({ password: md5(password) })

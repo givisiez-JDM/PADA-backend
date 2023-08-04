@@ -1,32 +1,19 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Patient } from "./Patient";
-import { Allergies, Dosage, Frequency, Method } from "../../interfaces/ITreatment";
+import { Allergies, Method } from "../../interfaces/ITreatment";
 
 @Entity()
 export abstract class Treatment {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
-    type: "enum",
-    enum: Dosage,
-    nullable: false,
-  })
-  dosage: string;
+  @PrimaryColumn({ type: "uuid" })
+  id: string;
 
   @Column({
     type: "enum",
     enum: Allergies,
+    array: true,
     nullable: false,
   })
-  allergies: string;
-
-  @Column({
-    type: "enum",
-    enum: Frequency,
-    nullable: false,
-  })
-  frequency: string;
+  allergies: string[];
 
   @Column({
     type: "enum",
@@ -36,18 +23,10 @@ export abstract class Treatment {
   method: string;
 
   @Column({
-    name: 'start_Treatment',
-    type: "date",
-    nullable: false,
+    type: "boolean", 
+    nullable: false
   })
-  startTreatment: string;
-
-  @Column({
-    name: 'end_Treatment',
-    type: "date",
-    nullable: false,
-  })
-  endTreatment: string;
+  active: boolean;
 
   @Column({ name: "patientId", type: "uuid", nullable: false })
   patientId: string;
